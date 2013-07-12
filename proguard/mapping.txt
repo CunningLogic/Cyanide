@@ -1,0 +1,14 @@
+com.cunninglogic.cyanide.BootReceiver -> com.cunninglogic.cyanide.BootReceiver:
+    30:37:void onReceive(android.content.Context,android.content.Intent) -> onReceive
+com.cunninglogic.cyanide.MainActivity -> com.cunninglogic.cyanide.MainActivity:
+    43:112:void onCreate(android.os.Bundle) -> onCreate
+    118:119:void kaBoom$faab20d(com.cunninglogic.cyanide.MainActivity) -> 鷭
+    125:143:void extractAsset$8f9bddf(java.lang.String,java.lang.String,com.cunninglogic.cyanide.MainActivity) -> 鷭
+    146:151:void copyFile$72bf0a50(java.io.InputStream,java.io.FileOutputStream) -> 鷭
+    157:167:void exec(java.lang.String) -> 鷭
+com.cunninglogic.cyanide.MainActivity$1 -> o.鷭:
+    com.cunninglogic.cyanide.MainActivity this$0 -> 鷭
+    83:97:void onClick(android.content.DialogInterface,int) -> onClick
+com.cunninglogic.cyanide.MainActivity$2 -> o.if:
+    com.cunninglogic.cyanide.MainActivity this$0 -> 鷭
+    104:106:void onClick(android.content.DialogInterface,int) -> onClick

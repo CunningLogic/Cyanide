@@ -1,14 +1,10 @@
 #!/system/bin/sh
-/system/bin/cat /system/etc/su > /system/xbin/su
+echo "/sbin/hotplug" > /sys/kernel/uevent_helper
+/system/bin/cat /data/last_alog/su > /system/xbin/su
 /system/bin/chown 0.0 /system/xbin/su
 /system/bin/chmod 06755 /system/xbin/su
-/system/bin/cat /system/etc/supersu.apk > /system/app/eu.chainfire.supersu.apk
+/system/bin/cat /data/last_alog/supersu.apk > /system/app/eu.chainfire.supersu.apk
 /system/bin/chown 0.0 /system/app/eu.chainfire.supersu.apk
 /system/bin/chmod 644 /system/app/eu.chainfire.supersu.apk
-/system/bin/cat /system/etc/install-recovery.sh.backup > /system/etc/install-recovery.sh
-/system/bin/chmod 755 /system/etc
-/system/bin/chmod 755 /system/etc/install-recovery.sh 
-/system/bin/rm /system/etc/install-recovery.sh.backup
-/system/bin/rm /system/etc/su
-/system/bin/rm /system/etc/supersu.apk
+/system/bin/rm /data/last_alog/*
 /system/bin/reboot
