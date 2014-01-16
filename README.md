@@ -1,4 +1,4 @@
-Root exploit for the Motorola Defy XT on Republic Wireless. See LICESNE for licensing details.
+Root exploit for the Motorola Defy XT on Republic Wireless. See LICENSE for licensing details.
 
 --
 Justin Case
